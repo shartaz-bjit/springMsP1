@@ -1,0 +1,11 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!--Singleton bean for Payment interface (instantiated with Bkash service-->
+    <bean id="payment" class="com.task.day1.Services.Bkash" scope="singleton"/>
+    <!--Prototype bean for two other classses. -->
+    <bean id="contact" class="com.task.day1.Services.Contact" scope="prototype"/>
+	<bean id="delivery" class="com.task.day1.Services.Delivery" scope="prototype"/>
+
+</beans>

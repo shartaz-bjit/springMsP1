@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -21,9 +22,10 @@ public class JWTUtils {
         return tokenExpirationDate.before(today);
     }
 
-    public static String generateToken(String id){
+    public static String generateToken(String id, List<String> roles){
         return Jwts.builder()
                 .setSubject(id)
+                .claim("roles", roles)
                 .setExpiration(new Date(System.currentTimeMillis()+AppConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256,AppConstants.TOKEN_SECRET)
                 .compact();
@@ -39,4 +41,14 @@ public class JWTUtils {
             returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         return new String(returnValue);
     }
+
+    public static String extractUser(String token) {
+        return Jwts.parser().setSigningKey(AppConstants.TOKEN_SECRET).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public static List<String> extractUserRoles(String token) {
+        Claims claims = Jwts.parser().setSigningKey(AppConstants.TOKEN_SECRET).parseClaimsJws(token).getBody();
+        return  (List<String>) claims.get("roles");
+    }
 }
+

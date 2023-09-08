@@ -3,6 +3,9 @@ package com.spring.securityPractice.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +19,7 @@ public class UserEntity {
     private String userId;
     private String email;
     private String password;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_role")
+    private Set<RoleEntity> roles;
 }

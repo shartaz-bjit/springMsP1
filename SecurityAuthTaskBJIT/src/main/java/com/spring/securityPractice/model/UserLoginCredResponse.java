@@ -1,14 +1,12 @@
 package com.spring.securityPractice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Setter
+@Builder
 public class UserLoginCredResponse {
     private String userId;
     private String username;

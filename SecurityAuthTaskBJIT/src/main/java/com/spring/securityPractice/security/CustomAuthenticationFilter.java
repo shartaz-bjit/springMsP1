@@ -21,18 +21,24 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager){
+        this.authenticationManager = authenticationManager;
+        setFilterProcessesUrl("/sign_in");
+    }
 
     private final Map<String, Integer> attemptCount = new HashMap<String, Integer>();
 
@@ -52,18 +58,25 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        String user = ((User) authResult.getPrincipal()).getUsername();
-        String accessToken = JWTUtils.generateToken(user);
+        User user = (User) authResult.getPrincipal();
+        String username = user.getUsername();
         UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserReadDto userDto = userService.getUser(user);
-        if(attemptCount.get(userDto.getEmail()) > AppConstants.MAX_LOGIN_ATTEMPTS_LIMIT){
+        UserReadDto userDto = userService.getUser(username);
+
+        if (attemptCount.get(userDto.getEmail()) > AppConstants.MAX_LOGIN_ATTEMPTS_LIMIT) {
             restrictedResponse(response);
             return;
+        } else {
+            attemptCount.put(userDto.getEmail(), 0);
         }
-        else attemptCount.put(userDto.getEmail(), 0);
-        UserLoginCredResponse responseBody = new UserLoginCredResponse(userDto.getUserId(), userDto.getEmail(), AppConstants.TOKEN_PREFIX + accessToken);
+
+        List<String> userRoles = userDto.getRoles();
+        String accessToken = JWTUtils.generateToken(username, userRoles);
+
+        UserLoginCredResponse responseBody = new UserLoginCredResponse(userDto.getUserId(), userDto.getEmail(), accessToken);
         writeResponse(response, responseBody);
     }
+
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {

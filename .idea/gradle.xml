@@ -4,10 +4,42 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/APIGateway" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/APIGateway" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/msconfigserver" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/msconfigserver" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/mseurekaserver" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/mseurekaserver" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/msstudent" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/msstudent" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/msteacher" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/msteacher" />
           </set>
         </option>
       </GradleProjectSettings>
